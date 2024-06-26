@@ -34,7 +34,7 @@ const Products = () => {
                 {products.map((product, index) => (
                     <Col key={index} sm={12} md={6} lg={4}>
                         <Card style={{ margin: '10px' }}>
-                            X<Card.Img variant="top" src={product.thumbnail} />
+                            <Card.Img variant="top" src={product.thumbnail} />
                             <Card.Body>
                                 <Card.Title>{product.title}</Card.Title>
                                 <Card.Text>Price: ${product.price}</Card.Text>
