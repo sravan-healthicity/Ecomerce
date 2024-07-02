@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Button } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Card, Button, ButtonGroup } from 'react-bootstrap';
 import { Carousel, Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,12 @@ const Product = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
     const { addToCart } = React.useContext(CartContext);
+    const { showConfirmation, confirmation, hideConfirmation, confirmAddToCart, updateQuantity, cart } = useContext(CartContext);
+
+    const getProductQuantity = (productId) => {
+        const product = cart.find(item => item.id === productId);
+        return product ? product.quantity : 0;
+    };
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -45,11 +51,20 @@ const Product = () => {
 
                         </Carousel>
                     </Container>
+                    <Card.Body>
+                        <Card.Title>{product.title}</Card.Title>
+                        <Card.Text>${product.price}</Card.Text>
 
-                    <Card.Title>{product.title}</Card.Title>
-                    <Card.Text>Price: ${product.price}</Card.Text>
-                    <Card.Text>{product.description}</Card.Text>
-                    <Button onClick={() => addToCart(product)}>Add to Cart</Button>
+                        {getProductQuantity(product.id) > 0 ? (
+                            <ButtonGroup>
+                                <Button variant="secondary" onClick={() => updateQuantity(product.id, getProductQuantity(product.id) - 1)}>-</Button>
+                                <Button variant="light" disabled>{getProductQuantity(product.id)}</Button>
+                                <Button variant="secondary" onClick={() => updateQuantity(product.id, getProductQuantity(product.id) + 1)}>+</Button>
+                            </ButtonGroup>
+                        ) : (
+                            <Button variant="primary" onClick={() => showConfirmation(product)}>Add to Cart</Button>
+                        )}
+                    </Card.Body>
                 </Card.Body>
             </Card>
         </Container>

@@ -1,11 +1,17 @@
-import React from 'react';
-import { Navbar, Nav, Button, Container } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Navbar, Nav, Button, Container, Badge } from 'react-bootstrap';
 import { Link, Navigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
+import { CartContext } from '../contexts/CartContext';
+import { FaShoppingCart } from 'react-icons/fa';
+
 
 const Header = () => {
 
     const { user, logoutUser } = React.useContext(UserContext);
+    const { getTotalItems } = React.useContext(CartContext);
+
+    const totalItems = getTotalItems();
 
     return (
         <>
@@ -17,7 +23,8 @@ const Header = () => {
                         <Nav className="mr-auto">
                             <Nav.Link as={Link} to="/">Home</Nav.Link>
                             <Nav.Link as={Link} to="/products">Products</Nav.Link>
-                            <Nav.Link as={Link} to="/cart">Cart</Nav.Link>
+                            <Nav.Link as={Link} to="/cart"><FaShoppingCart size={24} />
+                                {totalItems > 0 && <Badge pill bg="danger" className="ml-1">{totalItems}</Badge>}</Nav.Link>
                             {/* {(user && user.isLoggedIn) ? <Nav.Link as={Link} to="/profile">Profile</Nav.Link> : null} */}
                         </Nav>
 
